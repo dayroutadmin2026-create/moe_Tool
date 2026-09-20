@@ -3,64 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รฯวษ วำสฮัวฬ ศํวไวส วแสแวใํะ | ใอใๆฯ อำไ ฮัวศษ</title>
+    <title>ุฃุฏุงุฉ ุงุณุชุฎุฑุงุฌ ุจูุงูุงุช ุงูุชูุงู…ูุฐ | ู…ุญู…ูุฏ ุญุณู ุฎุฑุงุจุฉ</title>
     <link rel="stylesheet" href="style.css">
-    <!-- รํÞๆไษ วแใๆÞฺ -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>??</text></svg>">
+    <!-- ุฃููููุฉ ุงูู…ููุน -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>๐“</text></svg>">
 </head>
 <body>
 
-    <!-- วแิวิษ วแวÝสสวอํษ วแรไํÞษ (Landing Overlay) -->
+    <!-- ุงูุดุงุดุฉ ุงูุงูุชุชุงุญูุฉ ุงูุฃูููุฉ (Landing Overlay) -->
     <div id="landing-overlay" class="landing-overlay">
         <div class="landing-content">
-            <div class="logo-animation">??</div>
-            <h1>รฯวษ วำสฮัวฬ ศํวไวส วแสแวใํะ</h1>
-            <p>อแ ใฤำำํ ยใไ ๆำัํฺ แวำสฮัวฬ ๆสอแํแ วแศํวไวส ใไ ใๆÞฺ วแๆาวัษ ๆใแÝวส PDF</p>
+            <div class="logo-animation">๐“</div>
+            <h1>ุฃุฏุงุฉ ุงุณุชุฎุฑุงุฌ ุจูุงูุงุช ุงูุชูุงู…ูุฐ</h1>
+            <p>ุญู ู…ุคุณุณู ุขู…ู ูุณุฑูุน ูุงุณุชุฎุฑุงุฌ ูุชุญููู ุงูุจูุงูุงุช ู…ู ู…ููุน ุงููุฒุงุฑุฉ ูู…ููุงุช PDF</p>
             
             <div class="loader">
                 <div class="spinner"></div>
-                <p>ฬวัํ สฬๅํา ศํฦษ วแฺใแ วแยใไษ...</p>
+                <p>ุฌุงุฑู ุชุฌููุฒ ุจูุฆุฉ ุงูุนู…ู ุงูุขู…ูุฉ...</p>
             </div>
 
             <button id="emergency-btn" class="emergency-btn" onclick="forceLoadApp()">
-                ? ฯฮๆแ ใศวิั แแสุศํÞ
+                โก ุฏุฎูู ู…ุจุงุดุฑ ููุชุทุจูู
             </button>
         </div>
     </div>
 
-    <!-- อวึไษ วแสุศํÞ (Iframe) -->
-    <!-- ใแวอูษ ๅไฯำํษ อัฬษ: allow="clipboard-read; clipboard-write" ึัๆัํษ ฬฯว๐ แฺใแ รฯวษ ิัํุ วแลิวัวส ๆวแไำฮ -->
+    <!-- ุญุงุถูุฉ ุงูุชุทุจูู (Iframe) -->
+    <!-- ู…ูุงุญุธุฉ ููุฏุณูุฉ ุญุฑุฌุฉ: allow="clipboard-read; clipboard-write" ุถุฑูุฑูุฉ ุฌุฏุงู ูุนู…ู ุฃุฏุงุฉ ุดุฑูุท ุงูุฅุดุงุฑุงุช ูุงููุณุฎ -->
     <iframe 
         id="app-frame" 
-        src="https://script.google.com/macros/s/AKfycbyOWipcYiNEraIIjyDRlDmX-5ZYj24XbPeTk5aDmlM-GIKT3FodqOgw3nd36UqoEEzM6w/exec" 
+        src="YOUR_GAS_WEB_APP_URL_HERE" 
         allow="clipboard-read; clipboard-write; fullscreen"
         onload="hideLanding()"
         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads">
     </iframe>
 
     <script>
-        // สำฬํแ Service Worker แแ฿ิÝ ฺไ อวแษ วแวสีวแ
+        // ุชุณุฌูู Service Worker ูููุดู ุนู ุญุงูุฉ ุงูุงุชุตุงู
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed'));
         }
 
-        // ลฮÝวม วแิวิษ วแวÝสสวอํษ ฺไฯ สอใํแ วแสุศํÞ ศไฬวอ
+        // ุฅุฎูุงุก ุงูุดุงุดุฉ ุงูุงูุชุชุงุญูุฉ ุนูุฏ ุชุญู…ูู ุงูุชุทุจูู ุจูุฌุงุญ
         function hideLanding() {
             const overlay = document.getElementById('landing-overlay');
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
-            }, 800); // วไสูวั วไสๅวม สรหํั วแวฮสÝวม
+            }, 800); // ุงูุชุธุงุฑ ุงูุชูุงุก ุชุฃุซูุฑ ุงูุงุฎุชูุงุก
         }
 
-        // าั วแุๆวัฦ: Ýํ อวแ สฺแํÞ สอใํแ Google Apps Script
+        // ุฒุฑ ุงูุทูุงุฑุฆ: ูู ุญุงู ุชุนููู ุชุญู…ูู Google Apps Script
         function forceLoadApp() {
             const frame = document.getElementById('app-frame');
-            frame.src = frame.src; // ลฺวฯษ สอใํแ วแÜ iframe
-            document.querySelector('.loader p').textContent = 'ฬวัํ Ýัึ วแสอใํแ วแใศวิั...';
+            frame.src = frame.src; // ุฅุนุงุฏุฉ ุชุญู…ูู ุงูู€ iframe
+            document.querySelector('.loader p').textContent = 'ุฌุงุฑู ูุฑุถ ุงูุชุญู…ูู ุงูู…ุจุงุดุฑ...';
         }
 
-        // ใฤÞส รใวไ: ละว วำสÛัÞ วแสอใํแ ร฿หั ใไ 10 หๆวไ๒ก รูๅั าั วแุๆวัฦ ศๆึๆอ
+        // ู…ุคูุช ุฃู…ุงู: ุฅุฐุง ุงุณุชุบุฑู ุงูุชุญู…ูู ุฃูุซุฑ ู…ู 10 ุซูุงููุ ุฃุธูุฑ ุฒุฑ ุงูุทูุงุฑุฆ ุจูุถูุญ
         setTimeout(() => {
             const btn = document.getElementById('emergency-btn');
             if (document.getElementById('landing-overlay').style.display !== 'none') {
