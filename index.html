@@ -1,95 +1,111 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أداة استخراج بيانات التلاميذ | محمود حسن خرابة</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>أداة استخراج بيانات التلاميذ | محمود حسن خرابة</title>
+
+<!-- ========== وسوم PWA ========== -->
+<meta name="theme-color" content="#667eea">
+<meta name="color-scheme" content="light">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="استخراج البيانات">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;width:100%;overflow:hidden;background:#f8f9fa;font-family:'Tajawal',sans-serif}
+
+/* ===== iframe الحامل للنظام ===== */
+#appFrame{position:fixed;inset:0;width:100%;height:100%;border:none;background:#fff;opacity:0;transition:opacity .8s ease;z-index:1}
+#appFrame.show{opacity:1}
+
+/* ===== شاشة الإقلاع ===== */
+#splash{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;
+background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);transition:opacity .8s ease,transform .8s ease}
+#splash.hide{opacity:0;transform:scale(1.08);pointer-events:none}
+.splash-logo{width:110px;height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;
+background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.25);border-radius:30px;backdrop-filter:blur(12px);
+margin-bottom:26px;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.splash-title{color:#fff;font-size:26px;font-weight:900;margin-bottom:8px}
+.splash-sub{color:rgba(255,255,255,.8);font-size:14px;font-weight:500;margin-bottom:42px}
+.splash-loader{width:220px;height:5px;background:rgba(255,255,255,.15);border-radius:10px;overflow:hidden}
+.splash-loader span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a5b4fc,#c4b5fd,#f0abfc);border-radius:10px;animation:load 2.4s ease forwards}
+@keyframes load{0%{width:0}50%{width:70%}100%{width:100%}}
+.splash-footer{position:absolute;bottom:28px;color:rgba(255,255,255,.55);font-size:12px;font-weight:600}
+
+/* ===== الأزرار العائمة ===== */
+.float-btn{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:2000;display:none;align-items:center;gap:9px;
+border:none;cursor:pointer;padding:14px 26px;border-radius:50px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;
+color:#fff;text-decoration:none;box-shadow:0 12px 32px rgba(0,0,0,.35);animation:slideUp .5s ease}
+@keyframes slideUp{from{opacity:0;transform:translate(-50%,30px)}to{opacity:1;transform:translate(-50%,0)}}
+#fallbackBtn{background:linear-gradient(135deg,#ef4444,#dc2626)}
+</style>
 </head>
 <body>
 
-    <!-- الشاشة الافتتاحية الأنيقة -->
-    <div id="landing-overlay" class="landing-overlay">
-        <div class="landing-content">
-            <div class="logo-animation">📊</div>
-            <h1>أداة استخراج بيانات التلاميذ</h1>
-            <p>حل مؤسسي آمن وسريع لاستخراج وتحليل البيانات من موقع الوزارة وملفات PDF</p>
-            
-            <div class="loader">
-                <div class="spinner"></div>
-                <p>جاري تجهيز بيئة العمل الآمنة...</p>
-            </div>
+<!-- شاشة الإقلاع -->
+<div id="splash">
+  <div class="splash-logo">📊</div>
+  <div class="splash-title">أداة استخراج بيانات التلاميذ</div>
+  <div class="splash-sub">حل مؤسسي آمن وسريع لاستخراج وتحليل البيانات</div>
+  <div class="splash-loader"><span></span></div>
+  <div class="splash-footer">تصميم وتطوير: أ/ محمود حسن خرابة</div>
+</div>
 
-            <button id="emergency-btn" class="emergency-btn" onclick="openAppInNewTab()">
-                 فتح التطبيق في نافذة جديدة
-            </button>
-            
-            <div class="security-note">
-                🔒 التطبيق يعمل على خوادم Google الآمنة
-            </div>
-        </div>
-    </div>
+<!-- =====================================================
+     iframe النظام 
+     ملاحظة حاسمة: تم إضافة clipboard-read, clipboard-write, download 
+     لأنها ضرورية لعمل أداة السحب (Bookmarklet) وزر تحميل Excel
+===================================================== -->
+<iframe id="appFrame"
+  src="ضع_رابط_GAS_الخاص_بك_هنا"
+  allow="clipboard-read; clipboard-write; download; fullscreen; geolocation"
+  title="أداة استخراج بيانات التلاميذ">
+</iframe>
 
-    <script>
-        // رابط تطبيق Google Apps Script
-        // ⚠️ استبدل هذا الرابط برابط تطبيقك الفعلي
-        const APP_URL = 'https://script.google.com/macros/s/AKfycbyOWipcYiNEraIIjyDRlDmX-5ZYj24XbPeTk5aDmlM-GIKT3FodqOgw3nd36UqoEEzM6w/exec';
+<!-- زر الطوارئ (يظهر فقط إذا تأخر التحميل) -->
+<a id="fallbackBtn" class="float-btn" href="#" target="_blank" rel="noopener">🔗 فتح التطبيق مباشرة في نافذة جديدة</a>
 
-        // تسجيل Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed'));
-        }
+<script>
+// ⚠️ هام جداً: استبدل هذا الرابط برابط نشر تطبيق Google Apps Script الخاص بك
+var APP_URL = 'ضع_رابط_GAS_الخاص_بك_هنا';
 
-        // محاولة فتح التطبيق تلقائياً بعد 2 ثانية
-        setTimeout(() => {
-            openAppInNewTab();
-        }, 2000);
+// تحديث رابط زر الطوارئ
+document.getElementById('appFrame').src = APP_URL;
+document.getElementById('fallbackBtn').href = APP_URL;
 
-        /**
-         * فتح التطبيق في نافذة/تبويب جديد
-         * هذا هو الحل الوحيد الموثوق مع Google Apps Script
-         */
-        function openAppInNewTab() {
-            const overlay = document.getElementById('landing-overlay');
-            const loaderText = document.querySelector('.loader p');
-            
-            loaderText.textContent = 'جاري فتح التطبيق...';
-            
-            // فتح التطبيق في نافذة جديدة
-            const appWindow = window.open(APP_URL, '_blank', 'width=1200,height=900');
-            
-            if (appWindow) {
-                // تم الفتح بنجاح
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.innerHTML = `
-                        <div class="landing-content">
-                            <div class="success-message">
-                                <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
-                                <h2>تم فتح التطبيق بنجاح!</h2>
-                                <p>إذا لم يظهر التطبيق، اضغط على الزر أدناه</p>
-                                <button onclick="window.location.reload()" class="retry-btn"> إعادة المحاولة</button>
-                            </div>
-                        </div>
-                    `;
-                    overlay.style.display = 'flex';
-                }, 800);
-            } else {
-                // تم منع النافذة المنبثقة
-                loaderText.textContent = '⚠️ تم منع النافذة المنبثقة';
-                document.getElementById('emergency-btn').style.display = 'inline-block';
-            }
-        }
+var frame  = document.getElementById('appFrame');
+var splash = document.getElementById('splash');
 
-        // إظهار زر الطوارئ بعد 5 ثوانٍ إذا لم يفتح التطبيق
-        setTimeout(() => {
-            const btn = document.getElementById('emergency-btn');
-            if (document.getElementById('landing-overlay').style.display !== 'none') {
-                btn.style.display = 'inline-block';
-                btn.style.animation = 'pulse 1.5s infinite';
-            }
-        }, 5000);
-    </script>
+/* إخفاء شاشة الإقلاع فور جاهزية النظام داخل الـ iframe */
+frame.addEventListener('load', function () {
+  // ننتظر نصف ثانية للتأكد من أن التطبيق بداخل الـ iframe بدأ rendering
+  setTimeout(function () { 
+    splash.classList.add('hide'); 
+    frame.classList.add('show'); 
+  }, 800);
+});
+
+/* خطة طوارئ: إذا استغرق التحميل أكثر من 10 ثوانٍ، نظهر زر الفتح المباشر */
+setTimeout(function () {
+  if (!splash.classList.contains('hide')) {
+    splash.style.opacity = '.35';
+    document.getElementById('fallbackBtn').style.display = 'flex';
+  }
+}, 10000);
+
+/* ===== Service Worker للكشف عن حالة الاتصال ===== */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (e) { console.warn('SW:', e); });
+  });
+}
+</script>
 </body>
 </html>
