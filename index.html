@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أداة استخراج بيانات التلاميذ | محمود حسن خرابة</title>
     <link rel="stylesheet" href="style.css">
-    <!-- أيقونة الموقع -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
 </head>
 <body>
 
-    <!-- الشاشة الافتتاحية الأنيقة (Landing Overlay) -->
+    <!-- الشاشة الافتتاحية الأنيقة -->
     <div id="landing-overlay" class="landing-overlay">
         <div class="landing-content">
             <div class="logo-animation">📊</div>
@@ -22,52 +21,75 @@
                 <p>جاري تجهيز بيئة العمل الآمنة...</p>
             </div>
 
-            <button id="emergency-btn" class="emergency-btn" onclick="forceLoadApp()">
-                ⚡ دخول مباشر للتطبيق
+            <button id="emergency-btn" class="emergency-btn" onclick="openAppInNewTab()">
+                 فتح التطبيق في نافذة جديدة
             </button>
+            
+            <div class="security-note">
+                🔒 التطبيق يعمل على خوادم Google الآمنة
+            </div>
         </div>
     </div>
 
-    <!-- حاضنة التطبيق (Iframe) -->
-    <!-- ملاحظة هندسية حرجة: allow="clipboard-read; clipboard-write" ضرورية جداً لعمل أداة شريط الإشارات والنسخ -->
-    <iframe 
-        id="app-frame" 
-        src="https://script.google.com/macros/s/AKfycbycF1sLtW3ZjW9dKq6soccWs76lQcyRzzrtD6aB6s876lpm30XWqWtn3XbWeQQvOgPw/exec" 
-        allow="clipboard-read; clipboard-write; fullscreen"
-        onload="hideLanding()"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads">
-    </iframe>
-
     <script>
-        // تسجيل Service Worker للكشف عن حالة الاتصال
+        // رابط تطبيق Google Apps Script
+        // ⚠️ استبدل هذا الرابط برابط تطبيقك الفعلي
+        const APP_URL = 'https://script.google.com/macros/s/AKfycbyOWipcYiNEraIIjyDRlDmX-5ZYj24XbPeTk5aDmlM-GIKT3FodqOgw3nd36UqoEEzM6w/exec';
+
+        // تسجيل Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed'));
         }
 
-        // إخفاء الشاشة الافتتاحية عند تحميل التطبيق بنجاح
-        function hideLanding() {
+        // محاولة فتح التطبيق تلقائياً بعد 2 ثانية
+        setTimeout(() => {
+            openAppInNewTab();
+        }, 2000);
+
+        /**
+         * فتح التطبيق في نافذة/تبويب جديد
+         * هذا هو الحل الوحيد الموثوق مع Google Apps Script
+         */
+        function openAppInNewTab() {
             const overlay = document.getElementById('landing-overlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 800); // انتظار انتهاء تأثير الاختفاء
+            const loaderText = document.querySelector('.loader p');
+            
+            loaderText.textContent = 'جاري فتح التطبيق...';
+            
+            // فتح التطبيق في نافذة جديدة
+            const appWindow = window.open(APP_URL, '_blank', 'width=1200,height=900');
+            
+            if (appWindow) {
+                // تم الفتح بنجاح
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.innerHTML = `
+                        <div class="landing-content">
+                            <div class="success-message">
+                                <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+                                <h2>تم فتح التطبيق بنجاح!</h2>
+                                <p>إذا لم يظهر التطبيق، اضغط على الزر أدناه</p>
+                                <button onclick="window.location.reload()" class="retry-btn"> إعادة المحاولة</button>
+                            </div>
+                        </div>
+                    `;
+                    overlay.style.display = 'flex';
+                }, 800);
+            } else {
+                // تم منع النافذة المنبثقة
+                loaderText.textContent = '⚠️ تم منع النافذة المنبثقة';
+                document.getElementById('emergency-btn').style.display = 'inline-block';
+            }
         }
 
-        // زر الطوارئ: في حال تعليق تحميل Google Apps Script
-        function forceLoadApp() {
-            const frame = document.getElementById('app-frame');
-            frame.src = frame.src; // إعادة تحميل الـ iframe
-            document.querySelector('.loader p').textContent = 'جاري فرض التحميل المباشر...';
-        }
-
-        // مؤقت أمان: إذا استغرق التحميل أكثر من 10 ثوانٍ، أظهر زر الطوارئ بوضوح
+        // إظهار زر الطوارئ بعد 5 ثوانٍ إذا لم يفتح التطبيق
         setTimeout(() => {
             const btn = document.getElementById('emergency-btn');
             if (document.getElementById('landing-overlay').style.display !== 'none') {
                 btn.style.display = 'inline-block';
                 btn.style.animation = 'pulse 1.5s infinite';
             }
-        }, 10000);
+        }, 5000);
     </script>
 </body>
 </html>
