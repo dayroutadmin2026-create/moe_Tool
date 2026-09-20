@@ -9,10 +9,10 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: var(--white);
-    overflow: hidden; /* ãäÚ ÇáÊãÑíÑ İí ÇáÕİÍÉ ÇáÑÆíÓíÉ */
+    overflow: hidden; /* Ù…Ù†Ø¹ Ø§Ù„ØªÙ…Ø±ÙŠØ± ÙÙŠ Ø§Ù„ØµÙØ­Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© */
 }
 
-/* ÇáÔÇÔÉ ÇáÇİÊÊÇÍíÉ */
+/* Ø§Ù„Ø´Ø§Ø´Ø© Ø§Ù„Ø§ÙØªØªØ§Ø­ÙŠØ© */
 .landing-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -51,7 +51,7 @@ body {
     margin-right: auto;
 }
 
-/* ãÄÔÑ ÇáÊÍãíá */
+/* Ù…Ø¤Ø´Ø± Ø§Ù„ØªØ­Ù…ÙŠÙ„ */
 .loader {
     display: flex;
     flex-direction: column;
@@ -67,9 +67,9 @@ body {
     animation: spin 1s linear infinite;
 }
 
-/* ÒÑ ÇáØæÇÑÆ ÇáÚÇÆã */
+/* Ø²Ø± Ø§Ù„Ø·ÙˆØ§Ø±Ø¦ Ø§Ù„Ø¹Ø§Ø¦Ù… */
 .emergency-btn {
-    display: none; /* ãÎİí ÇİÊÑÇÖíÇğ¡ íÙåÑ ÚäÏ ÇáÍÇÌÉ */
+    display: none; /* Ù…Ø®ÙÙŠ Ø§ÙØªØ±Ø§Ø¶ÙŠØ§Ù‹ØŒ ÙŠØ¸Ù‡Ø± Ø¹Ù†Ø¯ Ø§Ù„Ø­Ø§Ø¬Ø© */
     margin-top: 30px;
     padding: 12px 25px;
     background: rgba(255, 255, 255, 0.2);
@@ -88,7 +88,7 @@ body {
     color: var(--primary);
 }
 
-/* ÇáÜ Iframe ÇáĞí ÓíÍÊæí ÇáÊØÈíŞ */
+/* Ø§Ù„Ù€ Iframe Ø§Ù„Ø°ÙŠ Ø³ÙŠØ­ØªÙˆÙŠ Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ */
 #app-frame {
     width: 100vw;
     height: 100vh;
@@ -96,12 +96,12 @@ body {
     display: block;
 }
 
-/* ÇáÍÑßÇÊ (Animations) */
+/* Ø§Ù„Ø­Ø±ÙƒØ§Øª (Animations) */
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-/* ÇáÊÌÇæÈ ãÚ ÇáÌæÇá */
+/* Ø§Ù„ØªØ¬Ø§ÙˆØ¨ Ù…Ø¹ Ø§Ù„Ø¬ÙˆØ§Ù„ */
 @media (max-width: 768px) {
     .landing-content h1 { font-size: 1.8rem; }
     .landing-content p { font-size: 0.9rem; }
