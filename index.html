@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>√œ«… «” Œ—«Ã »Ì«‰«  «· ·«„Ì– | „Õ„Êœ Õ”‰ Œ—«»…</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- √ÌﬁÊ‰… «·„Êﬁ⁄ -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>??</text></svg>">
+</head>
+<body>
+
+    <!-- «·‘«‘… «·«›  «ÕÌ… «·√‰Ìﬁ… (Landing Overlay) -->
+    <div id="landing-overlay" class="landing-overlay">
+        <div class="landing-content">
+            <div class="logo-animation">??</div>
+            <h1>√œ«… «” Œ—«Ã »Ì«‰«  «· ·«„Ì–</h1>
+            <p>Õ· „ƒ””Ì ¬„‰ Ê”—Ì⁄ ·«” Œ—«Ã Ê Õ·Ì· «·»Ì«‰«  „‰ „Êﬁ⁄ «·Ê“«—… Ê„·›«  PDF</p>
+            
+            <div class="loader">
+                <div class="spinner"></div>
+                <p>Ã«—Ì  ÃÂÌ“ »Ì∆… «·⁄„· «·¬„‰…...</p>
+            </div>
+
+            <button id="emergency-btn" class="emergency-btn" onclick="forceLoadApp()">
+                ? œŒÊ· „»«‘— ·· ÿ»Ìﬁ
+            </button>
+        </div>
+    </div>
+
+    <!-- Õ«÷‰… «· ÿ»Ìﬁ (Iframe) -->
+    <!-- „·«ÕŸ… Â‰œ”Ì… Õ—Ã…: allow="clipboard-read; clipboard-write" ÷—Ê—Ì… Ãœ« ·⁄„· √œ«… ‘—Ìÿ «·≈‘«—«  Ê«·‰”Œ -->
+    <iframe 
+        id="app-frame" 
+        src="https://script.google.com/macros/s/AKfycbyOWipcYiNEraIIjyDRlDmX-5ZYj24XbPeTk5aDmlM-GIKT3FodqOgw3nd36UqoEEzM6w/exec" 
+        allow="clipboard-read; clipboard-write; fullscreen"
+        onload="hideLanding()"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads">
+    </iframe>
+
+    <script>
+        //  ”ÃÌ· Service Worker ··ﬂ‘› ⁄‰ Õ«·… «·« ’«·
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed'));
+        }
+
+        // ≈Œ›«¡ «·‘«‘… «·«›  «ÕÌ… ⁄‰œ  Õ„Ì· «· ÿ»Ìﬁ »‰Ã«Õ
+        function hideLanding() {
+            const overlay = document.getElementById('landing-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 800); // «‰ Ÿ«— «‰ Â«¡  √ÀÌ— «·«Œ ›«¡
+        }
+
+        // “— «·ÿÊ«—∆: ›Ì Õ«·  ⁄·Ìﬁ  Õ„Ì· Google Apps Script
+        function forceLoadApp() {
+            const frame = document.getElementById('app-frame');
+            frame.src = frame.src; // ≈⁄«œ…  Õ„Ì· «·‹ iframe
+            document.querySelector('.loader p').textContent = 'Ã«—Ì ›—÷ «· Õ„Ì· «·„»«‘—...';
+        }
+
+        // „ƒﬁ  √„«‰: ≈–« «” €—ﬁ «· Õ„Ì· √ﬂÀ— „‰ 10 ÀÊ«‰Ú° √ŸÂ— “— «·ÿÊ«—∆ »Ê÷ÊÕ
+        setTimeout(() => {
+            const btn = document.getElementById('emergency-btn');
+            if (document.getElementById('landing-overlay').style.display !== 'none') {
+                btn.style.display = 'inline-block';
+                btn.style.animation = 'pulse 1.5s infinite';
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
