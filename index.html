@@ -1,148 +1,87 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>أداة استخراج بيانات التلاميذ | محمود حسن خرابة</title>
-
-<meta name="theme-color" content="#667eea">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="استخراج البيانات">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
-
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;width:100%;overflow:hidden;background:#f8f9fa;font-family:'Tajawal',sans-serif}
-
-#appFrame{position:fixed;inset:0;width:100%;height:100%;border:none;background:#fff;opacity:0;transition:opacity .8s ease;z-index:1}
-#appFrame.show{opacity:1}
-
-#splash{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;
-background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);transition:opacity .8s ease,transform .8s ease}
-#splash.hide{opacity:0;transform:scale(1.08);pointer-events:none}
-.splash-logo{width:110px;height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;
-background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.25);border-radius:30px;backdrop-filter:blur(12px);
-margin-bottom:26px;animation:pulse 2.2s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-.splash-title{color:#fff;font-size:26px;font-weight:900;margin-bottom:8px}
-.splash-sub{color:rgba(255,255,255,.8);font-size:14px;font-weight:500;margin-bottom:42px}
-.splash-loader{width:220px;height:5px;background:rgba(255,255,255,.15);border-radius:10px;overflow:hidden}
-.splash-loader span{display:block;height:100%;width:0;background:linear-gradient(90deg,#a5b4fc,#c4b5fd,#f0abfc);border-radius:10px;animation:load 2.4s ease forwards}
-@keyframes load{0%{width:0}50%{width:70%}100%{width:100%}}
-.splash-footer{position:absolute;bottom:28px;color:rgba(255,255,255,.55);font-size:12px;font-weight:600}
-
-.float-btn{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:2000;display:none;align-items:center;gap:9px;
-border:none;cursor:pointer;padding:14px 26px;border-radius:50px;font-family:'Tajawal',sans-serif;font-size:14px;font-weight:800;
-color:#fff;text-decoration:none;box-shadow:0 12px 32px rgba(0,0,0,.35);animation:slideUp .5s ease}
-@keyframes slideUp{from{opacity:0;transform:translate(-50%,30px)}to{opacity:1;transform:translate(-50%,0)}}
-#fallbackBtn{background:linear-gradient(135deg,#ef4444,#dc2626)}
-
-/* شاشة الخطأ المحسّنة */
-#error-screen{position:fixed;inset:0;z-index:3000;display:none;flex-direction:column;align-items:center;justify-content:center;
-background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center}
-#error-screen.show{display:flex}
-.error-card{background:white;border-radius:20px;padding:40px 30px;max-width:500px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.error-icon{font-size:70px;margin-bottom:20px}
-.error-title{color:#dc2626;font-size:22px;font-weight:900;margin-bottom:15px}
-.error-desc{color:#666;font-size:14px;line-height:1.8;margin-bottom:25px}
-.error-steps{text-align:right;background:#f0f8ff;padding:15px;border-radius:10px;margin-bottom:20px;border-right:4px solid #17a2b8}
-.error-steps ol{margin-right:20px;line-height:2;color:#333;font-size:13px}
-.error-btn{display:inline-block;background:linear-gradient(135deg,#10b981,#059669);color:white;padding:14px 28px;
-border-radius:50px;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 8px 20px rgba(16,185,129,.3);transition:all .3s}
-.error-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(16,185,129,.4)}
-.error-link{display:block;margin-top:12px;color:#667eea;font-size:12px;word-break:break-all;direction:ltr}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أداة استخراج بيانات التلاميذ | محمود حسن خرابة</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- شاشة الإقلاع -->
-<div id="splash">
-  <div class="splash-logo">📊</div>
-  <div class="splash-title">أداة استخراج بيانات التلاميذ</div>
-  <div class="splash-sub">حل مؤسسي آمن وسريع لاستخراج وتحليل البيانات</div>
-  <div class="splash-loader"><span></span></div>
-  <div class="splash-footer">تصميم وتطوير: أ/ محمود حسن خرابة</div>
-</div>
-
-<!-- شاشة الخطأ (تظهر فقط عند فشل التحميل) -->
-<div id="error-screen">
-  <div class="error-card">
-    <div class="error-icon">⚠️</div>
-    <div class="error-title">تعذّر الاتصال بالتطبيق</div>
-    <div class="error-desc">
-      يبدو أن هناك مشكلة في الاتصال بخوادم Google. هذا قد يكون بسبب رابط غير صحيح أو مشكلة في النشر.
+  <!-- الشاشة الافتتاحية -->
+  <div id="landing-overlay" class="landing-overlay">
+    <div class="landing-content">
+      <div class="logo-animation">📊</div>
+      <h1>أداة استخراج بيانات التلاميذ</h1>
+      <p>حل مؤسسي آمن وسريع لاستخراج وتحليل البيانات</p>
+      <p class="developer-credit">تصميم وتطوير: أ/ محمود حسن خرابة</p>
+      
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>جاري تحميل التطبيق...</p>
+      </div>
+      
+      <button id="emergency-btn" class="emergency-btn" onclick="openAppDirectly()">
+        🔗 فتح التطبيق مباشرة في نافذة جديدة
+      </button>
     </div>
-    <div class="error-steps">
-      <strong> خطوات الحل:</strong>
-      <ol>
-        <li>تأكد من اتصالك بالإنترنت</li>
-        <li>اضغط الزر الأخضر أدناه لفتح التطبيق مباشرة</li>
-        <li>إذا استمرت المشكلة، تحقق من رابط النشر في Google Apps Script</li>
-      </ol>
-    </div>
-    <a id="directLink" class="error-btn" href="#" target="_blank" rel="noopener">
-      🔗 فتح التطبيق مباشرة في نافذة جديدة
-    </a>
-    <div class="error-link" id="errorLinkDisplay"></div>
   </div>
-</div>
 
-<!-- iframe النظام -->
-<iframe id="appFrame"
-  allow="clipboard-read; clipboard-write; download; fullscreen; geolocation"
-  title="أداة استخراج بيانات التلاميذ">
-</iframe>
+  <!-- رسالة الخطأ -->
+  <div id="error-message" class="error-message" style="display: none;">
+    <div class="error-content">
+      <div class="error-icon">⚠️</div>
+      <h2>تعذّر الاتصال بالتطبيق</h2>
+      <p>يبدو أن هناك مشكلة في الاتصال بخوادم Google.</p>
+      <div class="error-steps">
+        <p><strong>خطوات الحل:</strong></p>
+        <ol>
+          <li>تأكد من اتصالك بالإنترنت</li>
+          <li>اضغط الزر أدناه لفتح التطبيق مباشرة</li>
+        </ol>
+      </div>
+      <button onclick="openAppDirectly()" class="retry-btn">
+        🔗 فتح التطبيق مباشرة
+      </button>
+    </div>
+  </div>
 
-<!-- زر الطوارئ -->
-<a id="fallbackBtn" class="float-btn" href="#" target="_blank" rel="noopener">🔗 فتح التطبيق مباشرة</a>
+  <!-- الـ Iframe -->
+  <iframe id="app-frame" style="display: none;"></iframe>
 
-<script>
-// ⚠️ هام: استبدل هذا الرابط برابط GAS الفعلي الخاص بك
-var APP_URL = 'https://script.google.com/macros/s/AKfycbyXJQmqZjqZ29KySAgErE0tB15urdIdQKuVAVc7OYtbcW88tgH_1kRHVbVn3PTAZ755jg/exec';
-
-var frame  = document.getElementById('appFrame');
-var splash = document.getElementById('splash');
-var errorScreen = document.getElementById('error-screen');
-var directLink = document.getElementById('directLink');
-var fallbackBtn = document.getElementById('fallbackBtn');
-var errorLinkDisplay = document.getElementById('errorLinkDisplay');
-
-// تحديث الروابط
-frame.src = APP_URL;
-directLink.href = APP_URL;
-fallbackBtn.href = APP_URL;
-errorLinkDisplay.textContent = APP_URL;
-
-var loadSuccess = false;
-
-/* عند نجاح تحميل iframe */
-frame.addEventListener('load', function () {
-  loadSuccess = true;
-  setTimeout(function () { 
-    splash.classList.add('hide'); 
-    frame.classList.add('show'); 
-  }, 800);
-});
-
-/* خطة طوارئ: إذا فشل التحميل خلال 12 ثانية */
-setTimeout(function () {
-  if (!loadSuccess && !splash.classList.contains('hide')) {
-    // إخفاء شاشة الإقلاع وإظهار شاشة الخطأ
-    splash.style.display = 'none';
-    errorScreen.classList.add('show');
-    fallbackBtn.style.display = 'flex';
-  }
-}, 12000);
-
-/* Service Worker */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function (e) { console.warn('SW:', e); });
-  });
-}
-</script>
+  <script>
+    // ضع رابط تطبيقك هنا
+    const APP_URL = 'https://script.google.com/macros/s/AKfycbzHJF6Boj3_GQ3WsYsv4v82DPi5GpVMng22yFUFJPGPY7AFZxBouOJKJ94B_eTcHVrl/exec';
+    
+    const landingOverlay = document.getElementById('landing-overlay');
+    const errorMessage = document.getElementById('error-message');
+    const appFrame = document.getElementById('app-frame');
+    
+    // تحميل التطبيق
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        try {
+          appFrame.src = APP_URL;
+          appFrame.style.display = 'block';
+          landingOverlay.style.opacity = '0';
+          setTimeout(() => {
+            landingOverlay.style.display = 'none';
+          }, 800);
+        } catch (error) {
+          showError();
+        }
+      }, 2000);
+    });
+    
+    // فتح التطبيق مباشرة
+    function openAppDirectly() {
+      window.open(APP_URL, '_blank');
+    }
+    
+    // إظهار رسالة الخطأ
+    function showError() {
+      landingOverlay.style.display = 'none';
+      errorMessage.style.display = 'flex';
+    }
+  </script>
 </body>
 </html>
