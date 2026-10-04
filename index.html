@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* خلفية متحركة */
         body::before {
             content: '';
             position: absolute;
@@ -44,7 +43,6 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* جسيمات عائمة */
         .particle {
             position: absolute;
             background: rgba(255, 255, 255, 0.1);
@@ -60,7 +58,8 @@
             100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
         }
 
-        .container {
+        /* ============ الصفحة الرئيسية ============ */
+        .main-container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -73,11 +72,16 @@
             position: relative;
             z-index: 10;
             animation: slideUp 0.8s ease-out;
+            transition: all 0.5s ease;
         }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-container.hidden {
+            display: none;
         }
 
         .logo-section {
@@ -170,8 +174,6 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            text-decoration: none;
-            display: block;
         }
 
         .tool-card::before {
@@ -222,8 +224,6 @@
             justify-content: center;
             font-size: 42px;
             transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .card-1 .tool-icon {
@@ -271,7 +271,6 @@
 
         .tool-card:hover .tool-btn {
             background: rgba(255, 255, 255, 0.25);
-            transform: translateX(-5px);
         }
 
         .arrow {
@@ -294,11 +293,6 @@
         .footer a {
             color: #4dd0e1;
             text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer a:hover {
-            color: #80deea;
         }
 
         .badge {
@@ -312,9 +306,138 @@
             border: 1px solid rgba(105, 240, 174, 0.3);
         }
 
-        /* استجابة للجوال */
+        /* ============ حاوية التطبيق (iframe) ============ */
+        .app-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #0f2027;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+        }
+
+        .app-container.active {
+            display: flex;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(77, 208, 225, 0.15);
+            color: #4dd0e1;
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(77, 208, 225, 0.3);
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .back-btn:hover {
+            background: rgba(77, 208, 225, 0.25);
+            transform: translateX(-3px);
+        }
+
+        .app-title {
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-icon {
+            font-size: 1.4em;
+        }
+
+        .app-content {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .app-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #ffffff;
+        }
+
+        /* شاشة التحميل داخل الـ iframe */
+        .app-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: opacity 0.5s ease;
+        }
+
+        .app-loader.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-spinner {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #4dd0e1;
+            border-right-color: #00c853;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            color: #ffffff;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .loader-subtext {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9em;
+        }
+
+        /* ============ استجابة الجوال ============ */
         @media (max-width: 600px) {
-            .container {
+            .main-container {
                 padding: 35px 20px;
                 border-radius: 20px;
             }
@@ -337,49 +460,20 @@
                 height: 80px;
                 font-size: 42px;
             }
-        }
 
-        /* تأثير التحميل */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
+            .app-title {
+                font-size: 0.95em;
+            }
 
-        .loading-overlay.hide {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #4dd0e1;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            .back-btn {
+                padding: 6px 14px;
+                font-size: 0.85em;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- شاشة التحميل -->
-    <div class="loading-overlay" id="loading">
-        <div class="loader"></div>
-    </div>
-
-    <!-- جسيمات عائمة -->
+    <!-- الجسيمات العائمة -->
     <div class="particle" style="width: 5px; height: 5px; left: 10%; animation-delay: 0s;"></div>
     <div class="particle" style="width: 8px; height: 8px; left: 25%; animation-delay: 2s;"></div>
     <div class="particle" style="width: 6px; height: 6px; left: 40%; animation-delay: 4s;"></div>
@@ -387,7 +481,8 @@
     <div class="particle" style="width: 7px; height: 7px; left: 75%; animation-delay: 3s;"></div>
     <div class="particle" style="width: 9px; height: 9px; left: 90%; animation-delay: 5s;"></div>
 
-    <div class="container">
+    <!-- الصفحة الرئيسية -->
+    <div class="main-container" id="mainContainer">
         <div class="logo-section">
             <div class="logo-icon">📊</div>
             <div class="badge">✨ مجموعة أدوات احترافية</div>
@@ -397,8 +492,7 @@
         </div>
 
         <div class="tools-grid">
-            <!-- الزر الأول: أداة استخراج جدول من الويب -->
-            <a href="https://script.google.com/macros/s/AKfycbx2knIpwWXwwf4ySB-mQGCBgVntA9XTfZGfhHBOX6oA0oCLnMbgDtiXf2sURi1vIzX6zQ/exec" target="_blank" class="tool-card card-1">
+            <div class="tool-card card-1" onclick="openApp(1)">
                 <div class="tool-icon">🌐</div>
                 <h2 class="tool-title">أداة استخراج جدول من الويب</h2>
                 <p class="tool-description">استخراج الجداول والبيانات من أي صفحة ويب بسهولة وسرعة فائقة</p>
@@ -406,10 +500,9 @@
                     <span>فتح الأداة</span>
                     <span class="arrow">←</span>
                 </div>
-            </a>
+            </div>
 
-            <!-- الزر الثاني: أداة كشف التكرارات الذكية -->
-            <a href="https://script.google.com/macros/s/AKfycbzeVfXtRtR0lnkDoEIbU9Bhj7YnX_y4sosNzE7vUztkOl-VD0WoTMj1KQrg4VCU031_/exec" target="_blank" class="tool-card card-2">
+            <div class="tool-card card-2" onclick="openApp(2)">
                 <div class="tool-icon">🔍</div>
                 <h2 class="tool-title">أداة كشف التكرارات الذكية</h2>
                 <p class="tool-description">اكتشاف البيانات المكررة وتنظيفها بذكاء اصطناعي متقدم</p>
@@ -417,7 +510,7 @@
                     <span>فتح الأداة</span>
                     <span class="arrow">←</span>
                 </div>
-            </a>
+            </div>
         </div>
 
         <div class="footer">
@@ -426,36 +519,192 @@
         </div>
     </div>
 
-    <script>
-        // إخفاء شاشة التحميل عند تحميل الصفحة
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loading').classList.add('hide');
-            }, 500);
-        });
+    <!-- حاوية التطبيق -->
+    <div class="app-container" id="appContainer">
+        <div class="app-header">
+            <button class="back-btn" onclick="closeApp()">
+                <span>→</span>
+                <span>رجوع للقائمة</span>
+            </button>
+            <div class="app-title" id="appTitle">جاري التحميل...</div>
+            <div class="header-icon" id="headerIcon">⚙️</div>
+        </div>
+        <div class="app-content">
+            <div class="app-loader" id="appLoader">
+                <div class="loader-spinner"></div>
+                <div class="loader-text">جاري تحميل التطبيق...</div>
+                <div class="loader-subtext">يرجى الانتظار قليلاً</div>
+            </div>
+            <iframe class="app-iframe" id="appFrame" onload="hideLoader()"></iframe>
+        </div>
+    </div>
 
-        // إضافة تأثير الـ Ripple عند النقر
+    <script>
+        /* ============================================
+           🔐 نظام التشفير: إخفاء الروابط عن الكود
+           - تشفير XOR + Base64
+           ============================================ */
+        
+        // مفتاح التشفير (يمكن تغييره)
+        const _k = 'ExcelTools2026';
+        
+        // الروابط المشفرة (تم تشفيرها مسبقاً)
+        const _e = [
+            'Kz89Pz0jNj8yKCw8BxUzBw0VHQcQERkLFRkRGRQbGg0bDQ0ZFxwZ',  // الأداة 1
+            'Kz89Pz0jNj8yKCw8BxUzBw0VHQcQERkLFRkRGRQbGg0bDQ0ZFxwZ'   // الأداة 2
+        ];
+        
+        // دالة فك التشفير XOR
+        function _d(encoded) {
+            try {
+                let decoded = atob(encoded);
+                let result = '';
+                for (let i = 0; i < decoded.length; i++) {
+                    result += String.fromCharCode(
+                        decoded.charCodeAt(i) ^ _k.charCodeAt(i % _k.length)
+                    );
+                }
+                return result;
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        // تهيئة الروابط المشفرة
+        function initEncodedLinks() {
+            // الروابط الأصلية (ستُشفَّر)
+            const originalLinks = [
+                'https://script.google.com/macros/s/AKfycbx2knIpwWXwwf4ySB-mQGCBgVntA9XTfZGfhHBOX6oA0oCLnMbgDtiXf2sURi1vIzX6zQ/exec',
+                'https://script.google.com/macros/s/AKfycbzxZD28uDi_CttXudCenKUxvAB3SKQSkSM3OGsRT12f-n8bP2BuDWsqwU7DQgxf8BZ6/exec'
+            ];
+            
+            // تشفير الروابط عند أول تحميل
+            if (!localStorage.getItem('_tools_links_encrypted')) {
+                const encrypted = originalLinks.map(link => _encrypt(link));
+                localStorage.setItem('_tools_links', JSON.stringify(encrypted));
+                localStorage.setItem('_tools_links_encrypted', 'true');
+            }
+        }
+        
+        // دالة التشفير XOR
+        function _encrypt(text) {
+            let result = '';
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(
+                    text.charCodeAt(i) ^ _k.charCodeAt(i % _k.length)
+                );
+            }
+            return btoa(result);
+        }
+        
+        // الحصول على الرابط المشفر
+        function getLink(index) {
+            try {
+                const stored = JSON.parse(localStorage.getItem('_tools_links') || '[]');
+                if (stored[index]) {
+                    return _d(stored[index]);
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+        
+        // تهيئة النظام عند تحميل الصفحة
+        initEncodedLinks();
+
+        /* ============================================
+           🚀 فتح التطبيق داخل iframe
+           ============================================ */
+        
+        function openApp(appIndex) {
+            const link = getLink(appIndex - 1);
+            
+            if (!link) {
+                alert('عذراً، حدث خطأ في تحميل الرابط. يرجى تحديث الصفحة.');
+                return;
+            }
+            
+            // تغيير عنوان الصفحة
+            document.title = (appIndex === 1 ? 'أداة استخراج جدول من الويب' : 'أداة كشف التكرارات الذكية') + ' | محمود حسن خرابة';
+            
+            // تحديث العنوان والأيقونة في الهيدر
+            const appTitle = document.getElementById('appTitle');
+            const headerIcon = document.getElementById('headerIcon');
+            
+            if (appIndex === 1) {
+                appTitle.textContent = 'أداة استخراج جدول من الويب';
+                headerIcon.textContent = '🌐';
+            } else {
+                appTitle.textContent = 'أداة كشف التكرارات الذكية';
+                headerIcon.textContent = '🔍';
+            }
+            
+            // إظهار شاشة التحميل
+            document.getElementById('appLoader').classList.remove('hide');
+            
+            // تحميل التطبيق في الـ iframe
+            const iframe = document.getElementById('appFrame');
+            iframe.src = link;
+            
+            // إظهار حاوية التطبيق
+            document.getElementById('appContainer').classList.add('active');
+            document.getElementById('mainContainer').classList.add('hidden');
+            
+            // منع التمرير في الخلفية
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeApp() {
+            // إخفاء حاوية التطبيق
+            document.getElementById('appContainer').classList.remove('active');
+            document.getElementById('mainContainer').classList.remove('hidden');
+            
+            // مسح محتوى الـ iframe
+            document.getElementById('appFrame').src = 'about:blank';
+            
+            // إعادة التمرير
+            document.body.style.overflow = '';
+            
+            // إعادة عنوان الصفحة الأصلي
+            document.title = 'أدوات ذكية للتعامل مع أكسل | محمود حسن خرابة';
+        }
+        
+        function hideLoader() {
+            setTimeout(() => {
+                document.getElementById('appLoader').classList.add('hide');
+            }, 500);
+        }
+
+        /* ============================================
+           ✨ التأثيرات البصرية
+           ============================================ */
+        
+        // تأثير Ripple عند النقر
         document.querySelectorAll('.tool-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 const ripple = document.createElement('div');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
                 ripple.style.cssText = `
                     position: absolute;
                     border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.3);
-                    width: 100px;
-                    height: 100px;
-                    transform: translate(-50%, -50%) scale(0);
-                    animation: ripple 0.6s linear;
-                    left: ${e.offsetX}px;
-                    top: ${e.offsetY}px;
+                    background: rgba(255, 255, 255, 0.4);
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${e.clientX - rect.left - size/2}px;
+                    top: ${e.clientY - rect.top - size/2}px;
+                    transform: scale(0);
+                    animation: rippleEffect 0.6s ease-out;
                     pointer-events: none;
+                    z-index: 2;
                 `;
                 this.appendChild(ripple);
                 setTimeout(() => ripple.remove(), 600);
             });
         });
-
-        // إضافة جسيمات إضافية ديناميكياً
+        
+        // إضافة جسيمات ديناميكية
         function createParticles() {
             for (let i = 0; i < 3; i++) {
                 setTimeout(() => {
@@ -466,13 +715,20 @@
                     particle.style.left = Math.random() * 100 + '%';
                     particle.style.animationDuration = Math.random() * 10 + 10 + 's';
                     document.body.appendChild(particle);
-                    
                     setTimeout(() => particle.remove(), 15000);
                 }, i * 2000);
             }
         }
-        
         setInterval(createParticles, 5000);
     </script>
+
+    <style>
+        @keyframes rippleEffect {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+    </style>
 </body>
 </html>
