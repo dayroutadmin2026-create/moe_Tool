@@ -1,87 +1,478 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أداة استخراج بيانات التلاميذ | محمود حسن خرابة</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أدوات ذكية للتعامل مع أكسل | محمود حسن خرابة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية متحركة */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(76, 175, 80, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(33, 150, 243, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(156, 39, 176, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* جسيمات عائمة */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #00c853 0%, #00b0ff 100%);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 55px;
+            box-shadow: 0 15px 40px rgba(0, 200, 83, 0.4);
+            animation: bounce 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #a8edea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .developer {
+            color: #4dd0e1;
+            font-size: 0.95em;
+            font-weight: 500;
+            display: inline-block;
+            padding: 6px 18px;
+            background: rgba(77, 208, 225, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(77, 208, 225, 0.3);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--card-color1), var(--card-color2));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tool-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-1 {
+            --card-color1: rgba(255, 152, 0, 0.4);
+            --card-color2: rgba(255, 87, 34, 0.4);
+        }
+
+        .card-2 {
+            --card-color1: rgba(156, 39, 176, 0.4);
+            --card-color2: rgba(63, 81, 181, 0.4);
+        }
+
+        .tool-icon {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-1 .tool-icon {
+            background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+            box-shadow: 0 10px 30px rgba(255, 87, 34, 0.4);
+        }
+
+        .card-2 .tool-icon {
+            background: linear-gradient(135deg, #9c27b0 0%, #3f51b5 100%);
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.4);
+        }
+
+        .tool-card:hover .tool-icon {
+            transform: rotateY(360deg) scale(1.1);
+        }
+
+        .tool-title {
+            color: #ffffff;
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .tool-description {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            min-height: 48px;
+        }
+
+        .tool-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.95em;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover .tool-btn {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-5px);
+        }
+
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover .arrow {
+            transform: translateX(-5px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #4dd0e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #80deea;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 200, 83, 0.15);
+            color: #69f0ae;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            border: 1px solid rgba(105, 240, 174, 0.3);
+        }
+
+        /* استجابة للجوال */
+        @media (max-width: 600px) {
+            .container {
+                padding: 35px 20px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .tool-card {
+                padding: 30px 20px;
+            }
+
+            .logo-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 42px;
+            }
+        }
+
+        /* تأثير التحميل */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-overlay.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #4dd0e1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-  <!-- الشاشة الافتتاحية -->
-  <div id="landing-overlay" class="landing-overlay">
-    <div class="landing-content">
-      <div class="logo-animation">📊</div>
-      <h1>أداة استخراج بيانات التلاميذ</h1>
-      <p>حل مؤسسي آمن وسريع لاستخراج وتحليل البيانات</p>
-      <p class="developer-credit">تصميم وتطوير: أ/ محمود حسن خرابة</p>
-      
-      <div class="loader">
-        <div class="spinner"></div>
-        <p>جاري تحميل التطبيق...</p>
-      </div>
-      
-      <button id="emergency-btn" class="emergency-btn" onclick="openAppDirectly()">
-        🔗 فتح التطبيق مباشرة في نافذة جديدة
-      </button>
+    <!-- شاشة التحميل -->
+    <div class="loading-overlay" id="loading">
+        <div class="loader"></div>
     </div>
-  </div>
 
-  <!-- رسالة الخطأ -->
-  <div id="error-message" class="error-message" style="display: none;">
-    <div class="error-content">
-      <div class="error-icon">⚠️</div>
-      <h2>تعذّر الاتصال بالتطبيق</h2>
-      <p>يبدو أن هناك مشكلة في الاتصال بخوادم Google.</p>
-      <div class="error-steps">
-        <p><strong>خطوات الحل:</strong></p>
-        <ol>
-          <li>تأكد من اتصالك بالإنترنت</li>
-          <li>اضغط الزر أدناه لفتح التطبيق مباشرة</li>
-        </ol>
-      </div>
-      <button onclick="openAppDirectly()" class="retry-btn">
-        🔗 فتح التطبيق مباشرة
-      </button>
+    <!-- جسيمات عائمة -->
+    <div class="particle" style="width: 5px; height: 5px; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 8px; height: 8px; left: 25%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 6px; height: 6px; left: 40%; animation-delay: 4s;"></div>
+    <div class="particle" style="width: 10px; height: 10px; left: 60%; animation-delay: 1s;"></div>
+    <div class="particle" style="width: 7px; height: 7px; left: 75%; animation-delay: 3s;"></div>
+    <div class="particle" style="width: 9px; height: 9px; left: 90%; animation-delay: 5s;"></div>
+
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo-icon">📊</div>
+            <div class="badge">✨ مجموعة أدوات احترافية</div>
+            <h1>أدوات ذكية للتعامل مع أكسل</h1>
+            <p class="subtitle">حلول متكاملة وسريعة لإدارة وتحليل البيانات</p>
+            <div class="developer">👨‍💻 تصميم وتطوير: أ/ محمود حسن خرابة</div>
+        </div>
+
+        <div class="tools-grid">
+            <!-- الزر الأول: أداة استخراج جدول من الويب -->
+            <a href="https://script.google.com/macros/s/AKfycbx2knIpwWXwwf4ySB-mQGCBgVntA9XTfZGfhHBOX6oA0oCLnMbgDtiXf2sURi1vIzX6zQ/exec" target="_blank" class="tool-card card-1">
+                <div class="tool-icon">🌐</div>
+                <h2 class="tool-title">أداة استخراج جدول من الويب</h2>
+                <p class="tool-description">استخراج الجداول والبيانات من أي صفحة ويب بسهولة وسرعة فائقة</p>
+                <div class="tool-btn">
+                    <span>فتح الأداة</span>
+                    <span class="arrow">←</span>
+                </div>
+            </a>
+
+            <!-- الزر الثاني: أداة كشف التكرارات الذكية -->
+            <a href="https://script.google.com/macros/s/AKfycbzxZD28uDi_CttXudCenKUxvAB3SKQSkSM3OGsRT12f-n8bP2BuDWsqwU7DQgxf8BZ6/exec" target="_blank" class="tool-card card-2">
+                <div class="tool-icon">🔍</div>
+                <h2 class="tool-title">أداة كشف التكرارات الذكية</h2>
+                <p class="tool-description">اكتشاف البيانات المكررة وتنظيفها بذكاء اصطناعي متقدم</p>
+                <div class="tool-btn">
+                    <span>فتح الأداة</span>
+                    <span class="arrow">←</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 جميع الحقوق محفوظة | <a href="#">محمود حسن خرابة</a></p>
+            <p style="margin-top: 8px;">⚡ مُستضاف على Google Apps Script</p>
+        </div>
     </div>
-  </div>
 
-  <!-- الـ Iframe -->
-  <iframe id="app-frame" style="display: none;"></iframe>
+    <script>
+        // إخفاء شاشة التحميل عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hide');
+            }, 500);
+        });
 
-  <script>
-    // ضع رابط تطبيقك هنا
-    const APP_URL = 'https://script.google.com/macros/s/AKfycbx2knIpwWXwwf4ySB-mQGCBgVntA9XTfZGfhHBOX6oA0oCLnMbgDtiXf2sURi1vIzX6zQ/exec';
-    
-    const landingOverlay = document.getElementById('landing-overlay');
-    const errorMessage = document.getElementById('error-message');
-    const appFrame = document.getElementById('app-frame');
-    
-    // تحميل التطبيق
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        try {
-          appFrame.src = APP_URL;
-          appFrame.style.display = 'block';
-          landingOverlay.style.opacity = '0';
-          setTimeout(() => {
-            landingOverlay.style.display = 'none';
-          }, 800);
-        } catch (error) {
-          showError();
+        // إضافة تأثير الـ Ripple عند النقر
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.3);
+                    width: 100px;
+                    height: 100px;
+                    transform: translate(-50%, -50%) scale(0);
+                    animation: ripple 0.6s linear;
+                    left: ${e.offsetX}px;
+                    top: ${e.offsetY}px;
+                    pointer-events: none;
+                `;
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // إضافة جسيمات إضافية ديناميكياً
+        function createParticles() {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.width = Math.random() * 10 + 3 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 15000);
+                }, i * 2000);
+            }
         }
-      }, 2000);
-    });
-    
-    // فتح التطبيق مباشرة
-    function openAppDirectly() {
-      window.open(APP_URL, '_blank');
-    }
-    
-    // إظهار رسالة الخطأ
-    function showError() {
-      landingOverlay.style.display = 'none';
-      errorMessage.style.display = 'flex';
-    }
-  </script>
+        
+        setInterval(createParticles, 5000);
+    </script>
 </body>
 </html>
