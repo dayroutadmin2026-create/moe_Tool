@@ -547,26 +547,29 @@
 
     <script>
         /* ============================================
-           🔐 نظام التشفير XOR + Base64
+           🔐 نظام التشفير المتقدم متعدد الطبقات
+           (Dynamic Key + Rolling Byte Shift + XOR + Reverse + Base64)
            ============================================ */
         
-        const _k = 'ExcelTools2026';
+        // تجميع المفتاح ديناميكياً في الذاكرة لعدم ظهوره كنص صريح
+        const _k = [77,104,109,100,95,75,104,114,97,98,97,95,69,120,99,101,108,95,50,48,50,54,95,83,101,99,117,114,101,33].map(c => String.fromCharCode(c)).join('');
         
-        // الروابط المشفرة (لا تظهر كنص مقروء)
+        // الروابط المشفرة
         const _e = [
-            'LQwXFR9uQEAfEEBZQkJrHwwKCzgKQQ8cXx9fVyYKDBZDJ0AuJxVLU1BOdxMNLBwjODcbBFQES2UHVQ40KxctCDodRnELbhEeOSIKPCctIysEX3MGKjsvCyE2CCsYGmpWAEUQKgpUGh0VN1oJYx9XTiAb',
-            'LQwXFR9uQEAfEEBZQkJrHwwKCzgKQQ8cXx9fVyYKDBZDJ0AuJxVLU1BMIC4FPRgGGz1cH1xbdlkAMQEwVRYHBVsqXGhtT3ELDBYiLipYGiZIRFl5KVU1IVwDADshGQN7Y0QiTDUmOWRcXjNcV0hXVQ=='
+            'L2tFejgxTSs7dF4fYTs0b3c+Oms1R1B6dTYrM2dRQnkdN3N/OHI4Ois2aXknP2twUThnZ1xbeH5+RDBmIXA1YTtwR3M+I2xbfGAnbX1+d2lVUGs8fD5qVllwKSc=',
+            'L2tFejg1IX9pNHt5ZTNmUGI1bGpwN3lBQCF8eXlhRDRpOn1/TDB6cGpwazg3NWtwUThnZ1xbeH5+RDBmIXA1YTtwR3M+I2xbfGAnbX1+d2lVUGs8fD5qVllwKSc='
         ];
         
-        // دالة فك التشفير
+        // دالة فك التشفير المتقدمة
         function _d(encoded) {
             try {
-                const decoded = atob(encoded);
+                const raw = atob(encoded).split('').reverse().join('');
                 let result = '';
-                for (let i = 0; i < decoded.length; i++) {
-                    result += String.fromCharCode(
-                        decoded.charCodeAt(i) ^ _k.charCodeAt(i % _k.length)
-                    );
+                for (let i = 0; i < raw.length; i++) {
+                    const c = raw.charCodeAt(i);
+                    const k = _k.charCodeAt(i % _k.length);
+                    const s = (i * 7 + 13) % 64;
+                    result += String.fromCharCode(((c - s + 256) % 256) ^ k);
                 }
                 return result;
             } catch (e) {
