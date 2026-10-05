@@ -387,7 +387,6 @@
             background: #ffffff;
         }
 
-        /* شاشة التحميل داخل الـ iframe */
         .app-loader {
             position: absolute;
             top: 0;
@@ -470,6 +469,13 @@
                 font-size: 0.85em;
             }
         }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -541,23 +547,21 @@
 
     <script>
         /* ============================================
-           🔐 نظام التشفير: إخفاء الروابط عن الكود
-           - تشفير XOR + Base64
+           🔐 نظام التشفير XOR + Base64
            ============================================ */
         
-        // مفتاح التشفير (يمكن تغييره)
         const _k = 'ExcelTools2026';
         
-        // الروابط المشفرة (تم تشفيرها مسبقاً)
+        // الروابط المشفرة (لا تظهر كنص مقروء)
         const _e = [
-            'Kz89Pz0jNj8yKCw8BxUzBw0VHQcQERkLFRkRGRQbGg0bDQ0ZFxwZ',  // الأداة 1
-            'Kz89Pz0jNj8yKCw8BxUzBw0VHQcQERkLFRkRGRQbGg0bDQ0ZFxwZ'   // الأداة 2
+            'LQwXFR9uQEAfEEBZQkJrHwwKCzgKQQ8cXx9fVyYKDBZDJ0AuJxVLU1BOdxMNLBwjODcbBFQES2UHVQ40KxctCDodRnELbhEeOSIKPCctIysEX3MGKjsvCyE2CCsYGmpWAEUQKgpUGh0VN1oJYx9XTiAb',
+            'LQwXFR9uQEAfEEBZQkJrHwwKCzgKQQ8cXx9fVyYKDBZDJ0AuJxVLU1BMIC4FPRgGGz1cH1xbdlkAMQEwVRYHBVsqXGhtT3ELDBYiLipYGiZIRFl5KVU1IVwDADshGQN7Y0QiTDUmOWRcXjNcV0hXVQ=='
         ];
         
-        // دالة فك التشفير XOR
+        // دالة فك التشفير
         function _d(encoded) {
             try {
-                let decoded = atob(encoded);
+                const decoded = atob(encoded);
                 let result = '';
                 for (let i = 0; i < decoded.length; i++) {
                     result += String.fromCharCode(
@@ -570,48 +574,11 @@
             }
         }
         
-        // تهيئة الروابط المشفرة
-        function initEncodedLinks() {
-            // الروابط الأصلية (ستُشفَّر)
-            const originalLinks = [
-                'https://script.google.com/macros/s/AKfycbx2knIpwWXwwf4ySB-mQGCBgVntA9XTfZGfhHBOX6oA0oCLnMbgDtiXf2sURi1vIzX6zQ/exec',
-                'https://script.google.com/macros/s/AKfycbzxZD28uDi_CttXudCenKUxvAB3SKQSkSM3OGsRT12f-n8bP2BuDWsqwU7DQgxf8BZ6/exec'
-            ];
-            
-            // تشفير الروابط عند أول تحميل
-            if (!localStorage.getItem('_tools_links_encrypted')) {
-                const encrypted = originalLinks.map(link => _encrypt(link));
-                localStorage.setItem('_tools_links', JSON.stringify(encrypted));
-                localStorage.setItem('_tools_links_encrypted', 'true');
-            }
-        }
-        
-        // دالة التشفير XOR
-        function _encrypt(text) {
-            let result = '';
-            for (let i = 0; i < text.length; i++) {
-                result += String.fromCharCode(
-                    text.charCodeAt(i) ^ _k.charCodeAt(i % _k.length)
-                );
-            }
-            return btoa(result);
-        }
-        
-        // الحصول على الرابط المشفر
+        // الحصول على الرابط بعد فك التشفير
         function getLink(index) {
-            try {
-                const stored = JSON.parse(localStorage.getItem('_tools_links') || '[]');
-                if (stored[index]) {
-                    return _d(stored[index]);
-                }
-                return null;
-            } catch (e) {
-                return null;
-            }
+            if (index < 0 || index >= _e.length) return null;
+            return _d(_e[index]);
         }
-        
-        // تهيئة النظام عند تحميل الصفحة
-        initEncodedLinks();
 
         /* ============================================
            🚀 فتح التطبيق داخل iframe
@@ -625,48 +592,34 @@
                 return;
             }
             
-            // تغيير عنوان الصفحة
-            document.title = (appIndex === 1 ? 'أداة استخراج جدول من الويب' : 'أداة كشف التكرارات الذكية') + ' | محمود حسن خرابة';
+            // تحديث عنوان الصفحة
+            const titles = [
+                'أداة استخراج جدول من الويب',
+                'أداة كشف التكرارات الذكية'
+            ];
+            const icons = ['🌐', '🔍'];
             
-            // تحديث العنوان والأيقونة في الهيدر
-            const appTitle = document.getElementById('appTitle');
-            const headerIcon = document.getElementById('headerIcon');
-            
-            if (appIndex === 1) {
-                appTitle.textContent = 'أداة استخراج جدول من الويب';
-                headerIcon.textContent = '🌐';
-            } else {
-                appTitle.textContent = 'أداة كشف التكرارات الذكية';
-                headerIcon.textContent = '🔍';
-            }
+            document.title = titles[appIndex - 1] + ' | محمود حسن خرابة';
+            document.getElementById('appTitle').textContent = titles[appIndex - 1];
+            document.getElementById('headerIcon').textContent = icons[appIndex - 1];
             
             // إظهار شاشة التحميل
             document.getElementById('appLoader').classList.remove('hide');
             
-            // تحميل التطبيق في الـ iframe
-            const iframe = document.getElementById('appFrame');
-            iframe.src = link;
+            // تحميل التطبيق
+            document.getElementById('appFrame').src = link;
             
             // إظهار حاوية التطبيق
             document.getElementById('appContainer').classList.add('active');
             document.getElementById('mainContainer').classList.add('hidden');
-            
-            // منع التمرير في الخلفية
             document.body.style.overflow = 'hidden';
         }
         
         function closeApp() {
-            // إخفاء حاوية التطبيق
             document.getElementById('appContainer').classList.remove('active');
             document.getElementById('mainContainer').classList.remove('hidden');
-            
-            // مسح محتوى الـ iframe
             document.getElementById('appFrame').src = 'about:blank';
-            
-            // إعادة التمرير
             document.body.style.overflow = '';
-            
-            // إعادة عنوان الصفحة الأصلي
             document.title = 'أدوات ذكية للتعامل مع أكسل | محمود حسن خرابة';
         }
         
@@ -680,7 +633,6 @@
            ✨ التأثيرات البصرية
            ============================================ */
         
-        // تأثير Ripple عند النقر
         document.querySelectorAll('.tool-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 const ripple = document.createElement('div');
@@ -704,7 +656,6 @@
             });
         });
         
-        // إضافة جسيمات ديناميكية
         function createParticles() {
             for (let i = 0; i < 3; i++) {
                 setTimeout(() => {
@@ -721,14 +672,5 @@
         }
         setInterval(createParticles, 5000);
     </script>
-
-    <style>
-        @keyframes rippleEffect {
-            to {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-    </style>
 </body>
 </html>
